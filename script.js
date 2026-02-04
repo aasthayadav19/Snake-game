@@ -12,6 +12,10 @@ const timeElement = document.querySelector("#time")
 const blockHeight = 50;
 const blockWidth = 50;
 
+let isPaused = false;
+let gameSpeed = 300;
+
+
 let highScore =  localStorage.getItem("highScore") || 0;
 let score = 0;
 let time = `00-00`
@@ -146,19 +150,39 @@ function restartGame() {
       direction = "down"
       snake = [ { x: 1, y: 3}]
       food = {x: Math.floor(Math.random() * rows), y: Math.floor(Math.random() * cols)}
-      intervalID = setInterval(() => {render()},300)
+      intervalID = setInterval(() => {render()}, gameSpeed)
+
 
 
 }
 addEventListener("keydown", (event) =>{
-    if(event.key == "ArrowUp") {
+
+    // Pause Resume Feature
+    if(event.key === "p" || event.key === "P"){
+        if(!isPaused){
+            clearInterval(intervalID)
+            isPaused = true
+            console.log("Game Paused")
+        } else {
+            intervalID = setInterval(() => {render()}, gameSpeed)
+            isPaused = false
+            console.log("Game Resumed")
+        }
+        return;
+    }
+
+    if(event.key == "ArrowUp" && direction !== "down") {
        direction = "up"
-    } else if (event.key == "ArrowRight"){
+    } 
+    else if (event.key == "ArrowRight" && direction !== "left"){
         direction = "right"
-    }else if (event.key == "ArrowLeft"){
+    }
+    else if (event.key == "ArrowLeft" && direction !== "right"){
         direction = "left"
-    }else if (event.key == "ArrowDown"){
+    }
+    else if (event.key == "ArrowDown" && direction !== "up"){
         direction = "down"
     }
 
 })
+
